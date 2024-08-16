@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=OrderHierachy
+comment0.text=\n\ Write\ a\ description\ of\ class\ OrderHierachy\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=comparator
+comment1.target=OrderHierachy(java.util.Comparator)
+comment2.params=r
+comment2.target=void\ addOrder(Restaurant)
+comment3.params=
+comment3.target=Restaurant\ getRestaurant()
+comment4.params=
+comment4.target=java.util.List\ getList()
+comment5.params=
+comment5.target=void\ clearQueue()
+comment6.params=
+comment6.target=boolean\ isEmpty()
+comment7.params=r
+comment7.target=void\ addAll(java.util.List)
+numComments=8

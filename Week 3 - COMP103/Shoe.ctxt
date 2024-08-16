@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=Shoe
+comment0.text=\n\ Write\ a\ description\ of\ class\ Shoe\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=size\ brand\ model\ stock\ Colourway
+comment1.target=Shoe(double,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.awt.Color)
+comment2.params=
+comment2.target=double\ getSize()
+comment3.params=
+comment3.target=java.lang.String\ getBrand()
+comment4.params=
+comment4.target=java.lang.String\ getModel()
+comment5.params=
+comment5.target=java.lang.String\ getStock()
+comment6.params=
+comment6.target=java.lang.String\ toString()
+numComments=7

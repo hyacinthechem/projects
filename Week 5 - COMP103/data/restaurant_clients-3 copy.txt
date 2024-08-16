@@ -1,0 +1,10 @@
+Burger 2 6
+Burger 6 6
+Soup 8 2
+Sushi 6 4
+Salad 6 2
+Sushi 4 2
+IceCream 4 5
+Steak 7 1
+Soup 2 6
+

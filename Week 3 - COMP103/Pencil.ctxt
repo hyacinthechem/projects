@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Pencil
+comment0.text=Pencil
+comment1.params=
+comment1.target=void\ setupGUI()
+comment1.text=\n\ Setup\ the\ GUI\n
+comment2.params=action\ x\ y
+comment2.target=void\ doMouse(java.lang.String,\ double,\ double)
+comment2.text=\n\ Respond\ to\ mouse\ events\n
+comment3.params=
+comment3.target=void\ doUndo()
+comment3.text=\n\ Undo\ the\ last\ complete\ stroke\n
+comment4.params=
+comment4.target=void\ doRedo()
+comment5.params=
+comment5.target=void\ redrawCurrent()
+comment5.text=\n\ Redraw\ all\ strokes\n
+comment6.params=
+comment6.target=void\ display()
+comment7.params=arguments
+comment7.target=void\ main(java.lang.String[])
+numComments=8

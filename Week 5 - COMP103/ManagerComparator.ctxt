@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=ManagerComparator
+comment0.text=\n\ Write\ a\ description\ of\ class\ ManagerComparator\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=b1\ b2
+comment1.target=int\ compare(BankBalance,\ BankBalance)
+numComments=2
