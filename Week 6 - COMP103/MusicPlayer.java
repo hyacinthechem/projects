@@ -33,6 +33,7 @@ public void setupGUI(){
         UI.addButton("Clear" , this::clearLibrary);
         UI.addButton("Music Library", this::viewAllSongs);
         UI.addButton("Show me playlists", this::showPlaylists);
+        UI.addButton("Search" , () -> {searchSong(this.songName);});
         UI.addButton("Play Song" , () -> {playSong(this.songName);}); 
         UI.addButton("Show my playing queue", this::songQueue);
     
@@ -86,7 +87,7 @@ this.tempSongs.clear();
 
 
 public void viewAllSongs(){
-
+loadSongData();
  for(Map.Entry<String, Song> song : songs.entrySet()){
     
        UI.println(song.toString());
@@ -100,7 +101,8 @@ public void playSong(String songName){
     }
     
 public void selectGenre(){
-    
+
+
     
     }
     
@@ -109,11 +111,21 @@ public void showPlaylists(){
     
     }
     
-public void searchSong(){
-    
-    
+public void searchSong(String songName) {
+        UI.clearText();
+    for (Song song : songs.values()) {
+
+        if (song.getSongName().equals(songName)) {
+
+            UI.println(song.toString());
+
+        }
+
+
     }
-    
+
+}
+
 public void songQueue(){
     
     }
