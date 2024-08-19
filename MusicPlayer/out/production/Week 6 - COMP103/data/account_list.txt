@@ -1,0 +1,10 @@
+Joey Checking 1500.75
+Joey Savings 5000.5
+Michael Checking 3000.0
+Michael Savings 1200.25
+Angela Checking 250.4
+Angela Savings 150.6
+Harry Checking 800.8
+Harry Savings 2200.0
+Chiara Checking 1000.0
+Chiara Savings 3000.2
