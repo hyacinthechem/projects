@@ -27,6 +27,7 @@ public class MusicPlayer
     //Data Structures
     private List<Song> tempSongs;
     private List<String> yourPlaylistsOrdered  = new ArrayList<>();
+    private List<Song> ArrayQueue = new ArrayList<Song>();
 
     private Set<String> yourPlaylists = new HashSet<>();
     private Set<String> playingSongs = new HashSet<>();
@@ -38,13 +39,15 @@ public class MusicPlayer
 
     private Queue<Song> queueSongs;
 
+    private Audio audio;
 
     private String songName;
     private String genreName;
     private boolean type;
     private boolean play;
-   private boolean loop;
+    private boolean loop;
     private boolean addedSong;
+    private boolean running = false;
 
     public void setupGUI(){
     
@@ -189,10 +192,9 @@ public void playSong(String songName){
            if(f.getName().contains(songName)){
 
                UI.println("Playing song " + songName);
+               this.audio = new Audio(f);
 
-               Audio a1 = new Audio(f);
-
-               a1.playSong(f);
+               audio.playSong(f);
 
            }else{
 
@@ -228,7 +230,7 @@ public void viewGenre(String genreName, double x, double y){
 
     public void createPlaylist() {
         double x = 200;
-        double y = 500;
+        double y = 600;
 
         UI.clearText();     // Clear text once before drawing the playlist
         if(createdPlaylist){
@@ -309,61 +311,81 @@ public void searchSong(String songName,double x,double y) {
 }
 
 public void songQueue() {
-     UI.clearGraphics();
+    UI.clearGraphics();
 
-     if(addedSong){
-         queueSongs = new PriorityQueue<>();
-     }else{
-         queueSongs = new ArrayDeque<>();
-     }
+    if (addedSong) {
+        queueSongs = new PriorityQueue<>();
+    } else {
+        queueSongs = new ArrayDeque<>();
+    }
 
-     for(Song song : songs.values()){
-
-
-         for(String s : yourPlaylists){
-             if(s.contains(song.getSongName())){
-
-                 queueSongs.offer(song);
-
-             }
+    for (Song song : songs.values()) {
 
 
-         }
+        for (String s : yourPlaylistsOrdered) {
+            if (s.contains(song.getSongName())) {
 
-     }
+                queueSongs.offer(song);
+
+            }
+
+
+        }
+
+    }
 
      /*
-     for(Song song : queueSongs){
-         defaultY-= 30;
-         this.drawString(song.getSongName(), defaultX, defaultY);
+     UI.println(queueSongs);
+    ArrayQueue.addAll(queueSongs);
 
-     }
+    UI.println(ArrayQueue);
+    UI.println(yourPlaylistsOrdered);
 
       */
+    if (running) {
+        return;
+    }
+       running = true;
+    while (running && !queueSongs.isEmpty()){
 
-     if(playingSongs.isEmpty()){
+        if (playingSongs.isEmpty()) {
+
+            //  UI.println(queueSongs.element());
+            this.drawString(queueSongs.element().getSongName(), 180, 135);
+            playSong(queueSongs.element().getSongName());
 
 
-         this.drawString(queueSongs.element().getSongName(), 180, 135);
-
-         playSong(queueSongs.element().getSongName());
+            playingSongs.add(queueSongs.element().getSongName());
 
 
+            //.element();
+            queueSongs.poll(); //  UI.println(queueSongs.poll());  queueSongs.poll();
+            //   UI.println(queueSongs.element());
 
-         //.element();
-         queueSongs.poll();
+            for (Song song : queueSongs) {
 
-         for (Song song : queueSongs) {
+                defaultY -= 30;
+                this.drawString(song.getSongName(), defaultX, defaultY);
 
-             defaultY-= 30;
-             this.drawString(song.getSongName(), defaultX, defaultY);
+            }
 
-         }
+            audio.checkSong();
+            if (audio.songHasFinished()) {
+                playingSongs.clear();
+                UI.clearGraphics();
 
-     }
+            }
 
+
+        }
+
+
+    }
 
 }
+
+
+
 
 public void timerSetup(){
 
