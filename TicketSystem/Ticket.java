@@ -3,16 +3,18 @@ public class Ticket {
 
     private int priority;
     private int seat;
+    private int row;
     private String stand;
     private String name;
     private double price;
 
-    public Ticket(String name, double price, String stand, int seat){
+    public Ticket(String name, double price, int seat, int row){
 
         this.name = name;
         this.price = price;
         this.seat = seat;
-        this.stand = stand;
+        this.row = row;
+        //this.stand = stand;
 
     }
 
@@ -40,6 +42,13 @@ public class Ticket {
     public void setPriority(int priority){
 
         this.priority = priority;
+    }
+
+    @Override
+    public String toString(){
+
+        return(name + " " + "$" + price + " Seat: " + seat + " Row: " +  row);
+
     }
 
 }
