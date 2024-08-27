@@ -14,10 +14,11 @@ public class TicketSystem {
     private String adminPassword = "pass";
     private String ticketName;
     private int seatNumber;
-    public Password user;
+    public Password username;
+
 
 public void setupGUI(){
-    UI.addButton("Purchase Ticket", () -> { buyTicket(bankBalance); });
+    UI.addButton("Purchase Ticket", () -> { buyTicket(username); });
     UI.addButton("View Ticket", () -> { viewTicket(this.ticketName, this.seatNumber);});
     UI.addTextField("Name" , (String name) -> { ticketName = name;});
     UI.addTextField("Seat Number" , (String seat) -> seatNumber = Integer.parseInt(seat));
@@ -47,6 +48,9 @@ public void loadData() {
     }
 }
 
+public static void image(){
+    UI.drawImage("data/Stade_de_France_Rugby_1.jpg" , 100 , 200);
+}
 public void loadUserData() {
     String fileN = "data/user_list.txt";
     try {
@@ -94,8 +98,20 @@ if(!found){
 
 }
 
+public Password findUsername(String u) {
+    for(int i = 0; i < users.size(); i++){
+        if(users.get(i).getUser().equals(u)){
+            Password p1  = users.get(i);
+
+            return p1; }
+    }
+    return null;
+}
+
 public void buyTicket(Password user){
-   String username = UI.askString("Enter Username");
+    UI.clearText();
+    String username = UI.askString("Enter Username");
+    user = findUsername(username);
    if(user.getUser().equals(username)){
        String password = UI.askString("Enter Password");
        if(user.getPassword().equals(password)){
@@ -103,7 +119,7 @@ public void buyTicket(Password user){
            UI.drawString("Regular", 100, 200);
            UI.drawString("Premium", 100, 225);
            UI.drawString("Platinum", 100, 250);
-           ticketType(ticketName);
+           ticketType(ticketName, username);
        }else{
            UI.println("Incorrect Password");
        }
@@ -116,23 +132,23 @@ public void buyTicket(Password user){
 
 }
 
-    public void ticketType(String username){
+    public void ticketType(String ticketType,String person){
 
-        if(ticketName.equals("Regular")){
+        if(ticketType.equals("Regular")){
             Random rand = new Random();
-            Ticket t1 = new Ticket(username,75,rand.nextInt(90),rand.nextInt(10));
+            Ticket t1 = new Ticket(person,75,rand.nextInt(90),rand.nextInt(10));
             ticketData.add(t1);
 
         }
-        if(ticketName.equals("Premium")){
+        if(ticketType.equals("Premium")){
            Random rand = new Random();
-           Ticket t2 = new Ticket(username,180,rand.nextInt(90),rand.nextInt(10));
+           Ticket t2 = new Ticket(person,180,rand.nextInt(90),rand.nextInt(10));
            ticketData.add(t2);
         }
 
-       if(ticketName.equals("Platinum")){
+       if(ticketType.equals("Platinum")){
         Random rand = new Random();
-        Ticket t3 = new Ticket(username,300,rand.nextInt(90),rand.nextInt(10));
+        Ticket t3 = new Ticket(person,300,rand.nextInt(90),rand.nextInt(10));
         ticketData.add(t3);
         }
 
@@ -145,6 +161,8 @@ public void buyTicket(Password user){
     p1.setupGUITicket();
     TicketSystem ts = new TicketSystem();
     ts.loadData();
+    ts.image();
+    ts.loadUserData();
     ts.setupGUI();
 
 }
