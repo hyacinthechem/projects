@@ -1,7 +1,10 @@
 import ecs100.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
+import java.util.Map;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -10,10 +13,12 @@ public class TicketSystem {
 
     private List<Ticket> ticketData;
     private List<Password> users = new ArrayList<>();
+    private List<BankBalance> bankBalances = new ArrayList<>();
     private String password;
     private String adminPassword = "pass";
     private String ticketName;
     private int seatNumber;
+    private double amount; //checks if user has enough to pay for ticket
     public Password username;
 
 
@@ -24,6 +29,7 @@ public void setupGUI(){
     UI.addTextField("Seat Number" , (String seat) -> seatNumber = Integer.parseInt(seat));
     UI.addTextField("Password" , (String password) -> { this.password = password;});
     UI.addButton("All Tickets ( Admin )", () -> {viewTicketData(password);});
+    UI.addButton("Admin Save" , this::saveTicketInformation);
     UI.addButton("Clear", UI::clearText);
 }
 
@@ -39,7 +45,7 @@ public void loadData() {
            int row = sc.nextInt();
            int seatNumber = sc.nextInt();
            int priority = sc.nextInt();
-           ticketData.add(new Ticket(name, ticketPrice, seatNumber, row));
+           ticketData.add(new Ticket(name, ticketPrice, seatNumber, row, priority));
 
         }
 
@@ -68,6 +74,28 @@ public void loadUserData() {
 
     }catch(IOException e ){UI.println("File Failure" + e);}
 }
+
+
+public void loadBankBalanceData() {
+
+    String filePath = "data/account_list.txt";
+
+    try {
+        Scanner sc = new Scanner(Path.of(filePath));
+
+        while(sc.hasNext()){
+            String person = sc.next();
+            String accountName = sc.next();
+            double balance = sc.nextDouble();
+            bankBalances.add(new BankBalance(person,balance,accountName));
+        }
+
+
+    } catch (IOException e) {
+        UI.println("File Failure" + e);
+    }
+}
+
 
 public void viewTicketData(String pass) {
     UI.clearText();
@@ -132,28 +160,68 @@ public void buyTicket(Password user){
 
 }
 
+
+
     public void ticketType(String ticketType,String person){
 
-        if(ticketType.equals("Regular")){
-            Random rand = new Random();
-            Ticket t1 = new Ticket(person,75,rand.nextInt(90),rand.nextInt(10));
-            ticketData.add(t1);
+        for(BankBalance b : bankBalances){
+            if(b.getUser().equals(person) && b.getAccountName().equals("Checking")){
+                  amount = b.getBankBalance();
+                  
+            }
 
         }
-        if(ticketType.equals("Premium")){
-           Random rand = new Random();
-           Ticket t2 = new Ticket(person,180,rand.nextInt(90),rand.nextInt(10));
-           ticketData.add(t2);
+
+        if(ticketType.equals("Regular")){
+
+            if(amount>75) {
+                Random rand = new Random();
+                Ticket t1 = new Ticket(person, 75, rand.nextInt(90), rand.nextInt(10), 3);
+                ticketData.add(t1);
+
+            }else{
+                UI.println("Insufficient Funds");
+            }
+        }
+        if(ticketType.equals("Premium")) {
+            if (amount > 180) {
+                Random rand = new Random();
+                Ticket t2 = new Ticket(person, 180, rand.nextInt(90), rand.nextInt(10), 2);
+                ticketData.add(t2);
+
+            }else{
+                UI.println("Insufficient Funds");
+            }
         }
 
        if(ticketType.equals("Platinum")){
-        Random rand = new Random();
-        Ticket t3 = new Ticket(person,300,rand.nextInt(90),rand.nextInt(10));
-        ticketData.add(t3);
+           if (amount > 300) {
+               Random rand = new Random();
+               Ticket t3 = new Ticket(person, 300, rand.nextInt(90), rand.nextInt(10), 1);
+               ticketData.add(t3);
+           }else{
+               UI.println("Insufficient Funds");
+           }
         }
 
 }
+    public  void saveTicketInformation() {
 
+        String filePath = UIFileChooser.open("data/ticketData.txt");
+
+        try {
+            PrintStream outfile = new PrintStream(filePath);
+
+            for(int i = 0; i < ticketData.size(); i++){
+
+                outfile.println(ticketData.get(i).fileString());
+            }
+
+
+        } catch (IOException e) {
+            UI.println("File Failure" + e);
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -163,6 +231,7 @@ public void buyTicket(Password user){
     ts.loadData();
     ts.image();
     ts.loadUserData();
+    ts.loadBankBalanceData();
     ts.setupGUI();
 
 }
