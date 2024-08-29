@@ -21,15 +21,23 @@ public class TicketSystem {
     private double amount; //checks if user has enough to pay for ticket
     public Password username;
 
+    // Arrays that hold Ticket Information
+
+    private String [] type = { "Regular", "Premium", "Platinum" };
+    private double[] ticketPrice = {75, 180, 300};
+    private int[] priority = { 3, 2, 1 };
+
 
 public void setupGUI(){
     UI.addButton("Purchase Ticket", () -> { buyTicket(username); });
     UI.addButton("View Ticket", () -> { viewTicket(this.ticketName, this.seatNumber);});
+    UI.addButton("View", this::view);
     UI.addTextField("Name" , (String name) -> { ticketName = name;});
     UI.addTextField("Seat Number" , (String seat) -> seatNumber = Integer.parseInt(seat));
     UI.addTextField("Password" , (String password) -> { this.password = password;});
     UI.addButton("All Tickets ( Admin )", () -> {viewTicketData(password);});
     UI.addButton("Admin Save" , this::saveTicketInformation);
+    UI.addButton("Bank Save" ,  this::saveBankInformation);
     UI.addButton("Clear", UI::clearText);
 }
 
@@ -147,6 +155,7 @@ public void buyTicket(Password user){
            UI.drawString("Regular", 100, 200);
            UI.drawString("Premium", 100, 225);
            UI.drawString("Platinum", 100, 250);
+           //String ticketName = UI.askString("What type of Ticket do you want to buy?");
            ticketType(ticketName, username);
        }else{
            UI.println("Incorrect Password");
@@ -160,51 +169,50 @@ public void buyTicket(Password user){
 
 }
 
+public void ticketType(String ticketType, String person) {
+        Iterator<BankBalance> it = bankBalances.iterator();
+        while (it.hasNext()) {
+            BankBalance b = it.next();
+            if (b.getUser().equals(person) && b.getAccountName().equals("Checking")) {
+                amount = b.getBankBalance();
 
-
-    public void ticketType(String ticketType,String person){
-
-        for(BankBalance b : bankBalances){
-            if(b.getUser().equals(person) && b.getAccountName().equals("Checking")){
-                  amount = b.getBankBalance();
-                  
-            }
-
-        }
-
-        if(ticketType.equals("Regular")){
-
-            if(amount>75) {
-                Random rand = new Random();
-                Ticket t1 = new Ticket(person, 75, rand.nextInt(90), rand.nextInt(10), 3);
-                ticketData.add(t1);
-
-            }else{
-                UI.println("Insufficient Funds");
-            }
-        }
-        if(ticketType.equals("Premium")) {
-            if (amount > 180) {
-                Random rand = new Random();
-                Ticket t2 = new Ticket(person, 180, rand.nextInt(90), rand.nextInt(10), 2);
-                ticketData.add(t2);
-
-            }else{
-                UI.println("Insufficient Funds");
+                for (int i = 0; i < type.length; i++) {
+                    if (ticketType.equals(type[i])) {
+                        if (amount >= ticketPrice[i]) {
+                            Random rand = new Random();
+                            // Remove the current BankBalance entry
+                            it.remove();
+                            // Add the updated BankBalance entry
+                            bankBalances.add(new BankBalance(person, amount - ticketPrice[i], b.getAccountName()));
+                            // Add the new ticket
+                            ticketData.add(new Ticket(person, ticketPrice[i], rand.nextInt(10), rand.nextInt(90), priority[i]));
+                            UI.println("Ticket purchased successfully!");
+                            return;  // Exit the method after a successful purchase
+                        } else {
+                            UI.println("Insufficient funds to purchase the " + ticketType + " ticket.");
+                            return;
+                        }
+                    }
+                }
+                UI.println("Invalid ticket type selected.");
+                return;
             }
         }
 
-       if(ticketType.equals("Platinum")){
-           if (amount > 300) {
-               Random rand = new Random();
-               Ticket t3 = new Ticket(person, 300, rand.nextInt(90), rand.nextInt(10), 1);
-               ticketData.add(t3);
-           }else{
-               UI.println("Insufficient Funds");
-           }
-        }
+        UI.println("No matching bank account found for user " + person + ".");
+    }
 
-}
+    public void saveBankInformation() {
+        String filePath = UIFileChooser.open("data/account_list.txt");
+        try {
+            PrintStream outfile = new PrintStream(filePath);
+            for(BankBalance b : bankBalances){
+                outfile.println(b.toString());
+            }
+        } catch (IOException e) {
+            UI.println("File Failure" + e);
+        }
+    }
     public  void saveTicketInformation() {
 
         String filePath = UIFileChooser.open("data/ticketData.txt");
@@ -223,15 +231,22 @@ public void buyTicket(Password user){
         }
     }
 
+    public void view(){
+        for(BankBalance b : bankBalances){
+            UI.println(b.toString());
+        }
+}
+
 
     public static void main(String[] args) {
     PasswordManager p1 = new PasswordManager();
-    p1.setupGUITicket();
+    p1.setupGUI();
     TicketSystem ts = new TicketSystem();
     ts.loadData();
     ts.image();
     ts.loadUserData();
     ts.loadBankBalanceData();
+    //ts.view();
     ts.setupGUI();
 
 }
