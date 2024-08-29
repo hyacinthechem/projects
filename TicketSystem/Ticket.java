@@ -1,5 +1,5 @@
 
-public class Ticket {
+public class Ticket implements Comparable<Ticket> {
 
     private int priority;
     private int seat;
@@ -8,12 +8,13 @@ public class Ticket {
     private String name;
     private double price;
 
-    public Ticket(String name, double price, int seat, int row){
+    public Ticket(String name, double price, int seat, int row, int priority){
 
         this.name = name;
         this.price = price;
         this.seat = seat;
         this.row = row;
+        this.priority = priority;
         //this.stand = stand;
 
     }
@@ -47,7 +48,18 @@ public class Ticket {
     @Override
     public String toString(){
 
-        return(name + " " + "$" + price + " Seat: " + seat + " Row: " +  row);
+        return(name + " " + "$" + price + " Seat: " + seat + " Row: " +  row + " Priority: " + priority);
+
+    }
+
+    @Override
+
+    public int compareTo(Ticket other) {
+        return Integer.compare(this.priority, other.priority);
+    }
+    public String fileString(){
+
+        return(name + " " + price + " " + row + " " + seat + " " + priority);
 
     }
 
