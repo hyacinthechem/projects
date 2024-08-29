@@ -11,12 +11,18 @@ import java.util.*;
 
 public class TicketSystem {
 
+   // private Map<String, Ticket> tickets = new HashMap<>();
+    private Queue<Ticket> customers;
+
     private List<Ticket> ticketData;
     private List<Password> users = new ArrayList<>();
     private List<BankBalance> bankBalances = new ArrayList<>();
     private String password;
     private String adminPassword = "pass";
     private String ticketName;
+
+    private boolean customerPriority = false;
+
     private int seatNumber;
     private double amount; //checks if user has enough to pay for ticket
     public Password username;
@@ -31,7 +37,8 @@ public class TicketSystem {
 public void setupGUI(){
     UI.addButton("Purchase Ticket", () -> { buyTicket(username); });
     UI.addButton("View Ticket", () -> { viewTicket(this.ticketName, this.seatNumber);});
-    UI.addButton("View", this::view);
+    UI.addButton("Pre-Sale Priority", () -> {preSale(this.customerPriority = true);});
+    UI.addButton("Pre-Sale" , () -> {preSale(this.customerPriority);});
     UI.addTextField("Name" , (String name) -> { ticketName = name;});
     UI.addTextField("Seat Number" , (String seat) -> seatNumber = Integer.parseInt(seat));
     UI.addTextField("Password" , (String password) -> { this.password = password;});
@@ -39,7 +46,34 @@ public void setupGUI(){
     UI.addButton("Admin Save" , this::saveTicketInformation);
     UI.addButton("Bank Save" ,  this::saveBankInformation);
     UI.addButton("Clear", UI::clearText);
+    //UI.addButton("Test Queue," , this::testQueue);
 }
+
+public void preSale(boolean priority){
+
+    UI.drawString("All Blacks V France - PreSale" , 100 , 120);
+
+    if(priority){
+        customers = new PriorityQueue<>();
+    }else{
+        customers = new ArrayDeque<>();
+    }
+
+    for(int i = 0; i< ticketData.size(); i++){
+        customers.offer(ticketData.get(i));
+    }
+
+   while(!customers.isEmpty()){
+       Ticket ticket = customers.poll();
+       UI.println(ticket);
+   }
+
+}
+
+
+
+
+
 
 public void loadData() {
     try {
@@ -239,8 +273,8 @@ public void ticketType(String ticketType, String person) {
 
 
     public static void main(String[] args) {
-    PasswordManager p1 = new PasswordManager();
-    p1.setupGUI();
+   // PasswordManager p1 = new PasswordManager();
+   // p1.setupGUI();
     TicketSystem ts = new TicketSystem();
     ts.loadData();
     ts.image();
