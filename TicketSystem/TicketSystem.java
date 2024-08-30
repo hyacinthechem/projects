@@ -11,7 +11,7 @@ import java.util.*;
 
 public class TicketSystem {
 
-   // private Map<String, Ticket> tickets = new HashMap<>();
+    private Map<String, double[]> tickets = new HashMap<>();
     private Queue<Ticket> customers;
 
     private List<Ticket> ticketData;
@@ -26,6 +26,8 @@ public class TicketSystem {
     private int seatNumber;
     private double amount; //checks if user has enough to pay for ticket
     public Password username;
+    private String ticketUser;
+
 
     // Arrays that hold Ticket Information
 
@@ -46,6 +48,7 @@ public void setupGUI(){
     UI.addButton("Admin Save" , this::saveTicketInformation);
     UI.addButton("Bank Save" ,  this::saveBankInformation);
     UI.addButton("Clear", UI::clearText);
+    UI.setMouseListener(this::doMouse);
     //UI.addButton("Test Queue," , this::testQueue);
 }
 
@@ -70,6 +73,40 @@ public void preSale(boolean priority){
 
 }
 
+
+public void doMouse(String action, double x, double y){
+
+    if(action.equals("pressed")){
+       // UI.println("pressed at " + x +' ' + y);
+       for(Map.Entry<String, double[]> entry : tickets.entrySet()){
+           String text = entry.getKey();
+           double [] pos = entry.getValue();
+           if(Math.abs(pos[0] - x) < 50 && Math.abs(pos[1] - y) < 20 ){    //is the click within bounds
+                tickets.remove(text);
+                UI.clearGraphics();
+                image();
+
+                for(Map.Entry<String, double[]> redraw : tickets.entrySet()){
+                      String newText = redraw.getKey();
+                      double [] newPos = redraw.getValue();
+                      this.drawString(newText, newPos[0], newPos[1]);
+                }
+
+                UI.println("Item Succesfully added to cart");
+
+                ticketType(ticketName,ticketUser); //break since it is event mouse handler
+                return;
+           }
+
+
+               // if in the area. succesfully chosen. message displayed: total comes to...
+               // clear the graphics pane. redraw all the strings once cleared
+           }
+
+
+    }
+
+}
 
 
 
@@ -180,17 +217,18 @@ public Password findUsername(String u) {
 
 public void buyTicket(Password user){
     UI.clearText();
-    String username = UI.askString("Enter Username");
-    user = findUsername(username);
-   if(user.getUser().equals(username)){
+     ticketUser = UI.askString("Enter Username");
+    user = findUsername(ticketUser);
+   if(user.getUser().equals(ticketUser)){
        String password = UI.askString("Enter Password");
        if(user.getPassword().equals(password)){
-           String ticketName = UI.askString("What type of Ticket do you want to buy?");
-           UI.drawString("Regular", 100, 200);
-           UI.drawString("Premium", 100, 225);
-           UI.drawString("Platinum", 100, 250);
            //String ticketName = UI.askString("What type of Ticket do you want to buy?");
-           ticketType(ticketName, username);
+           this.drawString("Regular", 100, 200);
+           this.drawString("Premium", 100, 225);
+           this.drawString("Platinum", 100, 250);
+            ticketName = UI.askString("What type of Ticket do you want to buy?");
+           //String ticketName = UI.askString("What type of Ticket do you want to buy?");
+           ticketType(ticketName, ticketUser);
        }else{
            UI.println("Incorrect Password");
        }
@@ -199,6 +237,14 @@ public void buyTicket(Password user){
        UI.println("Username does not exist");
    }
 
+
+
+}
+
+public void drawString(String text, double x, double y){
+    UI.drawString(text, x, y);
+    double [] coordinates = {x, y};
+    tickets.put(text, coordinates);
 
 
 }
