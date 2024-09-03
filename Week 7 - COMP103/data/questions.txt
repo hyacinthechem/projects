@@ -1,0 +1,9 @@
+Question: Are you feeling good
+Question: Have you felt like this for a while
+Answer: Yes
+Answer: No
+Question: Do you play sports
+Question: Are you opposed to therapy
+Answer: Months
+Answer: Weeks
+Answer: Depression
