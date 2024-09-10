@@ -1,0 +1,27 @@
+Question: has whiskers //root node
+Question: bigger than person //mother of root
+Answer: Tiger// mother of the mother of root
+Answer: Cat //father of the mother of root
+Question: has legs
+Question: has trunk //father of root
+Answer: Elephant //mother of father of root
+Answer: Rhino
+Answer: Snake //father of father of root
+
+
+Root Title: President
+Title: Heads Of Departments
+Title: Deputy Directors
+Title: Directors
+Title: Governor General
+Title: Ambassador General
+Title: Chairman
+
+
+Father: Governor General
+
+
+
+
+
+
