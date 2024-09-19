@@ -1,17 +1,34 @@
 import ecs100.UI;
 
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-  public class STWOfficialsGeneralTree {
+public class STWOfficialsGeneralTree {
 
 Official allOfficials;
 Official selectedPosition = null;
 
+boolean recursive = false;
+
 public void setupGUI(){
     UI.addButton("Draw Officials", this:: drawOfficials);
     UI.addButton("Print standard Tree", this:: printTree);
+    UI.addButton("Print depth-first", () -> {depthFirstSearch(allOfficials);});
+    UI.addButton("Print depth-first recursive", () -> {depthFirstRecursiveSearch(allOfficials);});
+    UI.addButton("Print breadth-first recursive", ()-> {breadthFirstRecursiveSearch(allOfficials.getTeamOfficials());});
+    UI.addButton("Print breadth-first", () -> {breadthFirstSearch(allOfficials);});
+    UI.addButton("Print pre-order", () -> {preOrderSearch(allOfficials);});
+    UI.addButton("Print post-order", () -> {postOrderSearch(allOfficials);});
+    UI.addButton("Print in-order", () -> {inOrderSearch(allOfficials);});
+    UI.setMouseListener(this::doMouse);
+
+}
+
+
+public void doMouse(String action, double x, double y){
+
+
+
 
 }
 
@@ -27,6 +44,123 @@ public void drawOfficials(){
 
 
 }
+
+public void breadthFirstSearch(Official official){
+  //level order search
+
+    if(official == null ){
+        return;
+    }
+
+
+        Queue<Official> stwTeam = new ArrayDeque<>();
+
+        stwTeam.offer(official);
+
+        while (!stwTeam.isEmpty()) {
+            Official currentOfficial = stwTeam.poll();
+            if (currentOfficial == null) {
+                return;
+            }
+            UI.println(currentOfficial.toString());
+
+            for (Official o : currentOfficial.getTeamOfficials()) {
+                stwTeam.offer(o);
+            }
+        }
+
+
+
+
+    for(int i = 0; i<100; i++){
+
+        UI.println("--------------");
+
+    }
+
+
+
+
+}
+
+
+    public static void breadthFirstRecursiveSearch(Set<Official> officials) {
+        // Base case: if there are no officials at the current level, return
+    if(officials.isEmpty() ){
+        return;
+    }
+    Set<Official> newLevel = new HashSet<>();
+
+    for(Official o : officials){
+           UI.println(o.toString());
+           newLevel.addAll(o.getTeamOfficials());
+    }
+        breadthFirstRecursiveSearch(newLevel);
+
+
+        //breadthFirstRecursiveSearch(o);
+
+
+}
+
+
+
+public void depthFirstSearch(Official official){
+
+    if(official == null ){ //base case
+        return;
+    }
+
+    Stack<Official> officialStack = new Stack<>();
+    officialStack.push(official);
+    while(!officialStack.isEmpty()){
+        Official currentOfficial = officialStack.pop();
+        if (currentOfficial == null) {
+            return;
+        }
+
+       // officialStack.push(currentOfficial);
+        UI.println(currentOfficial.toString());
+        for (Official o : currentOfficial.getTeamOfficials()) {
+            officialStack.push(o);
+        }
+
+    }
+
+}
+
+public void depthFirstRecursiveSearch(Official official){
+    if(official == null ){
+        return;
+    }
+
+    Set<Official> teamOfficials = official.getTeamOfficials();
+
+
+    for(Official o : teamOfficials){
+        UI.println(o.toString());
+        depthFirstRecursiveSearch(o);
+    }
+
+}
+
+public void preOrderSearch(Official official){
+
+
+}
+
+public void postOrderSearch(Official official){
+
+
+}
+
+public void inOrderSearch(Official official){
+
+
+
+
+}
+
 
 public void drawTree(Official official){
     if (official==selectedPosition){
