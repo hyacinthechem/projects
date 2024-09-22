@@ -2,22 +2,27 @@ import ecs100.UI;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class STWOfficialsGeneralTree {
 
-Official allOfficials;
-Official selectedPosition = null;
+private Official allOfficials;
+private Official selectedPosition = null;
 
-boolean recursive = false;
+
+private String title;
+private boolean recursive = false;
+private boolean found;
 
 public void setupGUI(){
+    UI.addTextField("Title", (String s) -> {this.title = s;});
     UI.addButton("Draw Officials", this:: drawOfficials);
+    UI.addButton("Find Official", this:: findOfficial);
     UI.addButton("Print standard Tree", this:: printTree);
     UI.addButton("Print depth-first", () -> {depthFirstSearch(allOfficials);});
     UI.addButton("Print depth-first recursive", () -> {depthFirstRecursiveSearch(allOfficials);});
     UI.addButton("Print breadth-first recursive", ()-> {breadthFirstRecursiveSearch(allOfficials.getTeamOfficials());});
     UI.addButton("Print breadth-first", () -> {breadthFirstSearch(allOfficials);});
-    UI.addButton("Print pre-order", () -> {preOrderSearch(allOfficials);});
     UI.addButton("Print post-order", () -> {postOrderSearch(allOfficials);});
     UI.addButton("Print in-order", () -> {inOrderSearch(allOfficials);});
     UI.setMouseListener(this::doMouse);
@@ -144,19 +149,56 @@ public void depthFirstRecursiveSearch(Official official){
 
 }
 
-public void preOrderSearch(Official official){
 
-
-}
 
 public void postOrderSearch(Official official){
+
+    if(official == null ){
+        return;
+    }
+
+    Stack<Official> stack1 = new Stack<>();
+    Stack<Official> stack2 = new Stack<>();
+    stack1.push(official);
+
+    while(!stack1.isEmpty()){
+        Official currentOfficial = stack1.pop();
+        if (currentOfficial == null) {
+            return;
+        }
+        stack2.push(currentOfficial);
+        for (Official o : currentOfficial.getTeamOfficials()) {
+            stack1.push(o);
+        }
+    }
+
+    while(!stack2.isEmpty()){
+        Official currentOfficial = stack2.pop();
+        UI.println(currentOfficial.toString());
+    }
 
 
 }
 
 public void inOrderSearch(Official official){
+//only recursive implementation
 
+    if(official == null ){
+        return;
+    }
 
+    List<Official> teamOfficials = new ArrayList<>(official.getTeamOfficials());
+    int size = teamOfficials.size();
+
+    for(int i = 0; i<size / 2; i++){
+        inOrderSearch(teamOfficials.get(i));
+    }
+
+    UI.println(official.toString());
+
+    for(int i = size/2; i<size ; i++){
+        inOrderSearch(teamOfficials.get(i));
+    }
 
 
 }
@@ -193,6 +235,40 @@ public void recursiveProcess(Official official){
 
 
 }
+
+public void findOfficial(){
+    String officialTitle = findOfficial(title);
+    if(found) {
+        UI.println(officialTitle);
+    }else{
+        UI.println("Official not found");
+    }
+
+
+}
+
+
+
+public String findOfficial(String name){
+    found = false;
+    Queue<Official> officialQueue = new ArrayDeque<>();
+    officialQueue.offer(allOfficials);
+
+while(!officialQueue.isEmpty()){
+    Official currentOfficial = officialQueue.poll();
+    if(currentOfficial.getTitle().equals(name)){
+          found = true;
+          return(currentOfficial.toString());
+    }
+    for (Official o : currentOfficial.getTeamOfficials()) {
+        officialQueue.offer(o);
+    }
+}
+
+    return null;
+}
+
+
 
       public void loadOfficials() {
           allOfficials = new Official("President");
