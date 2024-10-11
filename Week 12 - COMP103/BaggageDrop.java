@@ -10,11 +10,13 @@ public class BaggageDrop {
     public Queue<Passenger> waitingQueue; //the main waiting queue
     public List<Queue<Passenger>> allBagDrops; //list of all bagdrops
     public boolean running = true;
+    public boolean prioQueue;
     public int delay = 200;
 
 
   public void setupGUI(){
     UI.addButton("Run Baggage Drop" , this::run);
+    UI.addButton("Run Baggage Drop Member",()->{prioQueue = true; resetQueues(); loadPassengers(); run();});
     UI.addButton("Display Checked-in Passengers", this::displayPassengers);
     UI.addButton("Exit", UI::quit);
     UI.addSlider("Speed", 1, 400, (double val) -> { val = delay;});
@@ -28,17 +30,41 @@ public class BaggageDrop {
    }
 
 public void resetQueues(){
-      waitingQueue = new ArrayDeque<Passenger>();
+
+      if(prioQueue) {
+
+         Comparator<Passenger> memberStatus = new Comparator<Passenger>() {
+             public int compare(Passenger p1, Passenger p2){
+                 if(p1.getPriority() > p2.getPriority()){
+                     return 1;
+                 }
+                 else if(p1.getPriority()<p2.getPriority()){
+                     return -1;
+                 }
+                 else if(p1.getPriority() == p2.getPriority()){
+                     return 0;
+                 }
+                 return 0;
+             }
+         };
+
+          waitingQueue = new PriorityQueue<>(memberStatus);
+
+
+      }else{
+          waitingQueue = new ArrayDeque<>();
+      }
+
+
       allBagDrops = new ArrayList<Queue<Passenger>>();
 
       for(int i = 0; i < BAG_DROP_COUNTERS; i++){
-          allBagDrops.add(new ArrayDeque<Passenger>()); //initialise the individual bagdrops and add them to bag drops queue
+          allBagDrops.add(new ArrayDeque<>()); //initialise the individual bagdrops and add them to bag drops queue
       }
 
       for(Queue<Passenger> bagDrop : allBagDrops){
           bagDropQueue = new ArrayDeque<Passenger>();
       }
-
 
 }
 
@@ -64,7 +90,7 @@ public void run(){
                 count++;
                 if (current != null) {
                     String bDrop = current.baggageDrop();
-                    UI.println(bDrop);
+                    UI.println(bDrop + current.getStatus());
                     UI.println(count);
                 }
                 UI.sleep(delay);
@@ -108,15 +134,16 @@ public void loadPassengers(){
               "Hannah Davis", "Andrew Phillips", "Emma Robinson", "Chris Wilson"};
 
     String[] flightNumbers = {"ANZ510", "ANZ671", "ANZ711", "ANZ106", "ANZ298", "ANZ376", "ANZ278", "ANZ188", "ANZ195", "ANZ858", "ANZ731", "ANZ352", "ANZ671", "ANZ556", "ANZ500", "ANZ929", "ANZ260", "ANZ429", "ANZ984", "ANZ593", "ANZ734", "ANZ124", "ANZ113", "ANZ529", "ANZ923", "ANZ374", "ANZ906", "ANZ247", "ANZ826", "ANZ820", "ANZ634", "ANZ262", "ANZ339", "ANZ538", "ANZ742", "ANZ481",};
+    String[] memberStatus = {"Airpoints Silver","Airpoints Gold", "Airpoints Elite", "Airpoints Platinum" };
 
 
-    waitingQueue = new ArrayDeque<Passenger>();
 
     Random rand = new Random();
     for(int i = 0; i < 200; i++){
         String name = names[rand.nextInt(names.length)];
         String flightNumber = flightNumbers[rand.nextInt(flightNumbers.length)];
-        Passenger p = new Passenger(name,flightNumber);
+        String membStatus = memberStatus[rand.nextInt(memberStatus.length)];
+        Passenger p = new Passenger(name,flightNumber,membStatus);
         waitingQueue.offer(p);
     }
 }
