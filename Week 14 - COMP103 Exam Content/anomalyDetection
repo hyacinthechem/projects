@@ -1,0 +1,12 @@
+Question: is the network not usual ip address
+Question Left: Were there more than 10 login attempts
+Question right: Did an Employer Login
+Question Left: Were these attempts done in less than five seconds
+Question Left: System Shut Down
+Question right: Alert Administrator
+Question Left: Was it at his usual time
+Question right: Was it an IT specialist
+Question Left: System is fine
+Question right: email employee for confirmation
+Question Left: Alert IT specialist
+Question Right: System Shut Down
