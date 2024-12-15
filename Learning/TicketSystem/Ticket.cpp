@@ -1,39 +1,33 @@
-//
-// Created by Hyacinthe Chemasle on 15/12/2024.
-//
-
 #include "Ticket.h"
 #include <sstream>
 #include <iostream>
 #include <string>
 
-Ticket::Ticket(std::string name, double price, int seatNumber, int rowNumber) //Constructor for Ticket Class
- : name(name), price(price), seatNumber(seatNumber), rowNumber(rowNumber){} //this is specific C++ syntax
+Ticket::Ticket(std::string name, double price, int seatNumber, int rowNumber)
+    : name(name), price(price), seatNumber(seatNumber), rowNumber(rowNumber) {} // Constructor initialization list
 
-/*These are the methods which are all Getters. The syntax is almost the same to Java*/
+// Getter methods with const keyword for const-correctness
 
-std::string Ticket::getName(){
-  return name;
+std::string Ticket::getName() const {  // Adding const to the method definition
+    return name;
 }
 
-double Ticket::getPrice(){
-  return price;
+double Ticket::getPrice() const {  // Adding const to the method definition
+    return price;
 }
 
-int Ticket::getSeatNumber(){
-  return seatNumber;
+int Ticket::getSeatNumber() const {  // Adding const to the method definition
+    return seatNumber;
 }
 
-int Ticket::getRowNumber(){
-  return rowNumber;
+int Ticket::getRowNumber() const {  // Adding const to the method definition
+    return rowNumber;
 }
 
-/*toString method equivalent in C++*/
+// toString method with const keyword for const-correctness
 
-std::string Ticket::toString(){
-  std::ostringstream sb; //Creates StringBuilder oss = new StringBuilder();
-  sb << name << "$" << price << " Seat: " << seatNumber << " Row: " << rowNumber; // << equivalent to + but in the context of StringBuilder it refers to oss.append(name);
-  return sb.str(); //equivalent to oss.toString(); sb.toString();
+std::string Ticket::toString() const {  // Adding const to the method definition
+    std::ostringstream sb;
+    sb << name << "$" << price << " Seat: " << seatNumber << " Row: " << rowNumber;
+    return sb.str();
 }
-
-

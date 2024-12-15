@@ -15,6 +15,7 @@ private:
     std::vector<Ticket> allTickets;
 
   public:
+    void exampleTicket();
     void purchaseTicket();
     void showTicket(Ticket ticket);
     void showAllTickets();

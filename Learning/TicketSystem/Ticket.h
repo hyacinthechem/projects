@@ -5,30 +5,28 @@
 #ifndef TICKET_H
 #define TICKET_H
 
-#include <sstream> //used for String based input/output equivalent to import java.lang.StringBuilder
-#include <iostream> //equivalent to importing java.io ( Used for System.in and System.our (std::cout, std::cin)
-#include <string> //equivalent to Java.String class import
+#include <sstream> // used for string-based input/output, equivalent to Java's StringBuilder
+#include <iostream> // equivalent to importing java.io (Used for System.in and System.out)
+#include <string> // equivalent to Java.String class import
 
-#endif //TICKET_H
-
-class Ticket{
-/* Private field declarations to Ticket Class*/
-    private:
+class Ticket {
+    // Private field declarations for the Ticket class
+private:
     int seatNumber;
     int rowNumber;
-    std::string stand;
     std::string name;
     double price;
 
-/* Public area which contains constructors and methods for that class*/
+    // Public area which contains constructors and methods for the class
 public:
-    Ticket(std::string name, double price, int seatNumber, int rowNumber); //Constructor for Ticket Class
+    Ticket(std::string name, double price, int seatNumber, int rowNumber); // Constructor for Ticket Class
 
-    /*These are the methods which are all Getters. The syntax is almost the same to Java*/
-    std::string getName();
-    double getPrice();
-    int getSeatNumber();
-    int getRowNumber();
-    std::string toString();
-
+    // Getter methods
+    std::string getName() const;
+    double getPrice() const;
+    int getSeatNumber() const;
+    int getRowNumber() const;
+    std::string toString() const;
 };
+
+#endif // TICKET_H
