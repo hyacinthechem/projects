@@ -17,9 +17,11 @@ private:
   public:
     void exampleTicket();
     void purchaseTicket();
+    void viewTicket();
     void showTicket(Ticket ticket);
     void showAllTickets();
     void showMostExpensiveTickets();
+    bool inSystem(std::string name);
 };
 
 
