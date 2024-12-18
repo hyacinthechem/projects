@@ -17,35 +17,51 @@ void TicketSystem::exampleTicket(){
 
 void TicketSystem::purchaseTicket() {
     std::string answer;
-    std::cout<<"Would you like to purchase a Ticket?";
-    std::cin>>answer;
-    if(answer == "yes") {
-     std::string name;
+    std::cout << "Would you like to purchase a Ticket? ";
+    std::cin >> answer;
+
+    if (answer == "yes") {
+        std::string name;
         int seatNumber;
         int rowNumber;
         double price;
-        std::cout<<"Please enter your name: ";
-        std::cin>>name;
-        std::cout<<"Please enter your seat number: ";
-        std::cin>>seatNumber;
-        std::cout<<"Please Enter your row number";
-        std::cin>>rowNumber;
-        if(rowNumber<5) {
-             price = 75;
-        }else {
-             price = 100;
+
+        // Clear the input buffer to handle any leftover newline characters
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        std::cout << "Please enter your name: ";
+        std::getline(std::cin, name);  // Use getline to capture full name with spaces
+
+        std::cout << "Please enter your seat number: ";
+        std::cin >> seatNumber;
+        std::cout << "Please enter your row number: ";
+        std::cin >> rowNumber;
+
+
+        if (rowNumber < 5) {
+            price = 75;
+        } else {
+            price = 100;
         }
-        Ticket newTicket(name, seatNumber, rowNumber, price);
-        std::cout<<"Succesfully Purchased Ticket";
+
+        Ticket newTicket(name, price, seatNumber, rowNumber);
+        std::cout << "Successfully Purchased Ticket" << newTicket.toString()<<std::endl;
         TicketSystem::allTickets.push_back(newTicket);
     }
 }
 
+
 void TicketSystem::viewTicket() {
     std::string name;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout<<"Please enter your name: ";
-    std::cin>>name;
-    inSystem(name);
+    std::getline(std::cin, name);
+    bool found = inSystem(name);
+    if(!found) {
+        std::cout<<"Name not in System"<<std::endl;
+    }else {
+        std::cout<<"Name: "<<name<<std::endl;
+    }
 }
 
 bool TicketSystem::inSystem(std::string name) {
