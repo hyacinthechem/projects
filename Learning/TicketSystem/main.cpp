@@ -6,7 +6,6 @@
 
 int main(){
   TicketSystem ticketSystem;
-  ticketSystem.purchaseTicket();
-  ticketSystem.viewTicket();
+  ticketSystem.loadTickets();
   ticketSystem.showAllTickets();
 }

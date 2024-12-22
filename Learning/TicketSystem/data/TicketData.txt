@@ -1,0 +1,7 @@
+Hyacinthe Chemasle, 100, 34, 8
+Antoine Dupont, 100,40, 10
+Elise Watkins, 75, 20, 4
+Jimmy McNulty, 75, 18, 2
+Michael Scott, 120, 1, 1
+Saoirse McGrady, 100, 35, 9
+
